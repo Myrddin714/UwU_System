@@ -29,7 +29,7 @@ namespace UwU
             string UwUControllerPath = $"{outputFolder}/{namePrefix}.controller";
 
             bool doesControllerExist = false;
-            string[] tempGuids = AssetDatabase.FindAssets($"{namePrefix} t:animatorcontroller", new[] { outputFolder });
+            string[] tempGuids = AssetDatabase.FindAssets($"{namePrefix}.controller t:animatorcontroller", new[] { outputFolder });
             if (tempGuids.Length > 0)
             {
                 doesControllerExist = true;

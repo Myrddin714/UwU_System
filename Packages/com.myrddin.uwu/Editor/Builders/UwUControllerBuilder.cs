@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.Animations;
+using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using VRC.SDKBase;

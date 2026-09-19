@@ -1,0 +1,10 @@
+{
+  "name": "UwUComponent.Runtime",
+  "versionDefines": [
+    {
+      "name": "com.vrcfury.vrcfury",
+      "expression": "1.1064.0",
+      "define": "Has_Compatible_VRCFury"
+    }
+  ]
+}

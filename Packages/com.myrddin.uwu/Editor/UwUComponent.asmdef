@@ -1,0 +1,25 @@
+{
+    "name": "UwUComponent",
+    "rootNamespace": "UwU",
+    "references": [
+        "UwUComponent.Runtime",
+        "com.vrcfury.api"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.vrcfury.vrcfury",
+            "expression": "1.1064.0",
+            "define": "Has_Compatible_VRCFury"
+        }
+    ],
+    "noEngineReferences": false
+}

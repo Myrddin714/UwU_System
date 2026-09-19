@@ -5,8 +5,6 @@ using UnityEditor.Animations;
 using System.Linq;
 using System.Collections.Generic;
 using VRC.SDKBase;
-using HarmonyLib;
-using PlasticGui.WorkspaceWindow.Items;
 using VRC.SDK3.Avatars.Components;
 
 namespace UwU

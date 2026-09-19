@@ -32,8 +32,23 @@ namespace UwU
             string[] tempGuids = AssetDatabase.FindAssets($"{namePrefix}.controller t:animatorcontroller", new[] { outputFolder });
             if (tempGuids.Length > 0)
             {
-                doesControllerExist = true;
-                Debug.LogWarning($"[UwU] Component with the name {namePrefix} already exists. Skipping duplicate occurance");
+                List<string> exactMatchGuids = new List<string>();
+                foreach (string guid in tempGuids)
+                {
+                    string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                    string fileName = Path.GetFileNameWithoutExtension(assetPath);
+                    
+                    if (fileName == namePrefix) 
+                    {
+                        exactMatchGuids.Add(guid);
+                    }
+                }
+
+                if (exactMatchGuids.Count > 0)
+                {
+                    doesControllerExist = true;
+                    Debug.LogWarning($"[UwU] Component with the name {namePrefix} already exists. Skipping duplicate occurance");
+                }
             }
 
             if (!doesControllerExist)

@@ -4,7 +4,7 @@ Adds a unity component that integrates with VRCFury to easily create parameters 
 
 ## ▶ Getting Started
 
-* Go to [This Link](https://Myrddin714.github.io/UwU_System/index.json)
+* Go to [This Link](https://Myrddin714.github.io/UwU_System)
 to add this repository to your VCC or ALCOM.
   * Add this repository to your Unity project.
   * Choose or create an object in your avatar hierarchy.

@@ -1,21 +1,17 @@
-# VPM Package Template
+# UwU (Unseen without Untoggling) System
 
-Starter for making Packages, including automation for building and publishing them.
-
-Once you're all set up, you'll be able to push changes to this repository and have .zip and .unitypackage versions automatically generated, and a listing made which works in the VPM for delivering updates for this package. If you want to make a listing with a variety of packages, check out our [template-package-listing](https://github.com/vrchat-community/template-package-listing) repo.
+Adds a unity component that integrates with VRCFury to easily create parameters that toggle on and off based on the built-in IsLocal and IsOnFriendsList parameters as well as other customizable conditions.
 
 ## ▶ Getting Started
 
-* Press [![Use This Template](https://user-images.githubusercontent.com/737888/185467681-e5fdb099-d99f-454b-8d9e-0760e5a6e588.png)](https://github.com/vrchat-community/template-package/generate)
-to start a new GitHub project based on this template.
-  * Choose a fitting repository name and description.
-  * Set the visibility to 'Public'. You can also choose 'Private' and change it later.
-  * You don't need to select 'Include all branches.'
-* Clone this repository locally using Git.
-  * If you're unfamiliar with Git and GitHub, [visit GitHub's documentation](https://docs.github.com/en/get-started/quickstart/git-and-github-learning-resources) to learn more.
-* Add the folder to Unity Hub and open it as a Unity Project.
-* After opening the project, wait while the VPM resolver is downloaded and added to your project.
-  * This gives you access to the VPM Package Maker and Package Resolver tools.
+* Go to [![This Page](https://user-images.githubusercontent.com/737888/185467681-e5fdb099-d99f-454b-8d9e-0760e5a6e588.png)](https://myrddin714.github.io/UwU_System)
+to add this repository to your VCC or ALCOM.
+  * Add this repository to your Unity project.
+  * Choose or create an object in your avatar hierarchy.
+  * Click the 'Add Component' button in the inspector window and select 'UwU System'.
+  * Enter a Parameter prefix in the first textbox.
+  * Set other settings as desired (See below for details).
+That's it. You can use the Parameters made by this component to trigger custom logic on your avatar (Examples below)
 
 ## 🚇 Migrating Assets Package
 Full details at [Converting Assets to a VPM Package](https://vcc.docs.vrchat.com/guides/convert-unitypackage)

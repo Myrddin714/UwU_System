@@ -9,7 +9,7 @@ to add this repository to your VCC or ALCOM.
   * Add this repository to your Unity project.
   * Choose or create an object in your avatar hierarchy.
   * Click the 'Add Component' button in the inspector window and select 'UwU System'.
-  * Enter a Parameter prefix in the first textbox.
+  * Enter a Parameter `Output Prefix` in the first textbox.
   * Set other settings as desired (See below for details).
 That's it. You can use the Parameters made by this component to trigger custom logic on your avatar (Examples below)
 

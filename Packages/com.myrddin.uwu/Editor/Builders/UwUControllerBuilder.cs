@@ -23,14 +23,15 @@ namespace UwU
             //string UwUOutputVariable = $"{UwUControllerName}/Load";
             
             string namePrefix = UwUData.namePrefix;
+            string controllerName = namePrefix + "_" + UwUData.avatarName;
             string UwUOutputVariable = $"{namePrefix}/Load";
             bool thresholdState = UwUData.thresholdState == 0;
             
             // Paths for assets inside the clean folder
-            string UwUControllerPath = $"{outputFolder}/{namePrefix}.controller";
+            string UwUControllerPath = $"{outputFolder}/{controllerName}.controller";
 
             bool doesControllerExist = false;
-            string[] tempGuids = AssetDatabase.FindAssets($"{namePrefix}.controller t:animatorcontroller", new[] { outputFolder });
+            string[] tempGuids = AssetDatabase.FindAssets($"{controllerName} t:animatorcontroller", new[] { outputFolder });
             if (tempGuids.Length > 0)
             {
                 List<string> exactMatchGuids = new List<string>();
@@ -38,8 +39,7 @@ namespace UwU
                 {
                     string assetPath = AssetDatabase.GUIDToAssetPath(guid);
                     string fileName = Path.GetFileNameWithoutExtension(assetPath);
-                    
-                    if (fileName == namePrefix) 
+                    if (fileName == controllerName) 
                     {
                         exactMatchGuids.Add(guid);
                     }
@@ -48,13 +48,14 @@ namespace UwU
                 if (exactMatchGuids.Count > 0)
                 {
                     doesControllerExist = true;
-                    Debug.LogWarning($"[UwU] Component with the name {namePrefix} already exists. Skipping duplicate occurance");
+                    Debug.LogWarning($"[UwU] Component with the name {controllerName} already exists. Skipping duplicate occurance");
                 }
             }
 
             if (!doesControllerExist)
             {
                 // 2. Create the Animator Controller asset
+                Debug.Log($"[UwU] Creating controller with the name {controllerName}");
                 AnimatorController UwUController = AnimatorController.CreateAnimatorControllerAtPath(UwUControllerPath);
                 
                 // 3. Add Parameters

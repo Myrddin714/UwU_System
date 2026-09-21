@@ -8,6 +8,7 @@ namespace UwU
     
     public class UwUMenu : MonoBehaviour, IEditorOnly
     {
+        public string avatarName;
         public string namePrefix;
         public int thresholdState = 0;
         

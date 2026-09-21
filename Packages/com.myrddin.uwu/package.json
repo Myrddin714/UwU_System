@@ -1,13 +1,10 @@
 {
-    "name": "com.myrddin.uwu",
-    "version": "0.0.5",
-    "displayName": "UwU System",
-    "description": "A System to create VRChat avatar parameters that change state depending on local and friend state.",
-    "unity": "2022.3",
-    "author": {
-        "name": "Myrddin"
-    },
-    "vpmDependencies": {
-        "com.vrchat.base": ">=3.3"
-    }
+  "name": "com.myrddin.uwu",
+  "version": "0.0.6",
+  "displayName": "UwU System",
+  "description": "A System to create VRChat avatar parameters that change state depending on local and friend state.",
+  "unity": "2022.3",
+  "author": {
+    "name": "Myrddin"
+  }
 }

@@ -19,8 +19,6 @@ namespace UwU
         private static bool RunUwUBuilders(GameObject avatarGameObject)
         {
             #if Has_Compatible_VRCFury
-            Debug.Log($"[UwU] Running preprocessing for avatar: {avatarGameObject.name}");
-
             var descriptor = avatarGameObject.GetComponent<VRCAvatarDescriptor>();
             if (descriptor == null)
             {
@@ -28,7 +26,7 @@ namespace UwU
                 return false;
             }
             
-            UwUBuildInit.UwUFolderSetup();
+            UwUBuildInit.UwUFolderSetup(avatarGameObject.name);
             
             var uwuMenus = avatarGameObject.GetComponentsInChildren<UwUMenu>(true);// ?? avatarGameObject.AddComponent<UwUMenu>();
             
@@ -37,6 +35,7 @@ namespace UwU
                 // Execute your custom component build-time logic
                 Debug.Log($"[UwU] UwUComponent: {menuData.name} found");
                 UwUMenu UWUData = UwUHelperMethods.Trim(menuData);
+                UWUData.avatarName = avatarGameObject.name;
                 AnimatorController UwUController;
                 VRCExpressionParameters UwUExpressionParams;
                 VRCExpressionsMenu UwUExpressionMenu;

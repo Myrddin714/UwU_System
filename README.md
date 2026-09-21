@@ -16,7 +16,7 @@ That's it. You can use the Parameters made by this component to trigger custom l
 ## Requirements
 
 * VRCFury is required for this package to work. Refer to the [VRCFury Website](https://vrcfury.com/download) for instructions on adding it to your project.
-* The 'Output Prefix' field is required and must be unique per avatar. If duplicates are found only one will be built.
+* The `Output Prefix` field is required and must be unique per avatar. If duplicates are found only one will be built.
 
 ## ✏️ Working on Your Package
 

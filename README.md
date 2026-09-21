@@ -13,8 +13,9 @@ to add this repository to your VCC or ALCOM.
   * Set other settings as desired (See below for details).
 That's it. You can use the Parameters made by this component to trigger custom logic on your avatar (Examples below)
 
-## 🚇 Migrating Assets Package
-Full details at [Converting Assets to a VPM Package](https://vcc.docs.vrchat.com/guides/convert-unitypackage)
+## Requirements
+
+* VRCFury is required for this package to work. Refer to the [VRCFury Website](https://vrcfury.com/download) for instructions on adding it to your project.
 
 ## ✏️ Working on Your Package
 

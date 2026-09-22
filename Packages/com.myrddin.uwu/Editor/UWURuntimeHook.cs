@@ -26,9 +26,10 @@ namespace UwU
                 return false;
             }
             
-            UwUBuildInit.UwUFolderSetup(avatarGameObject.name);
-            
             var uwuMenus = avatarGameObject.GetComponentsInChildren<UwUMenu>(true);// ?? avatarGameObject.AddComponent<UwUMenu>();
+            
+            if (uwuMenus.Length > 0)
+                UwUBuildInit.UwUFolderSetup(avatarGameObject.name);
             
             foreach (var menuData in uwuMenus)
             {

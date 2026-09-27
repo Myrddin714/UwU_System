@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using VRC.SDKBase;
 
 namespace UwU
@@ -16,10 +17,10 @@ namespace UwU
         public string menuPath = "UwU System";
         public bool createSubMenu = true;
         
-        public bool allowOffLocal;
+        public bool allowOffSelf;
         public int defaultVisibility;
-        
-        public bool localSaved = true;
+
+        public bool selfSaved = true;
         public bool friendsSaved = true;
         public bool globalSaved = true;
         

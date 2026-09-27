@@ -31,10 +31,10 @@ namespace UwU
             {
                 UwUExpressionParameterList.Add(new VRCExpressionParameters.Parameter
                 {
-                    name = $"{UwUControllerName}/Local",
+                    name = $"{UwUControllerName}/Self",
                     valueType = VRCExpressionParameters.ValueType.Bool,
                     defaultValue = 0f,
-                    saved = UwUData.localSaved,
+                    saved = UwUData.selfSaved,
                     networkSynced = true
                 });
                 UwUExpressionParameterList.Add(new VRCExpressionParameters.Parameter
@@ -54,7 +54,7 @@ namespace UwU
                     networkSynced = true
                 });
 
-                if (UwUData.allowOffLocal)
+                if (UwUData.allowOffSelf)
                 {
                     switch (UwUData.defaultVisibility)
                     {

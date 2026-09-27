@@ -16,9 +16,9 @@ namespace UwU
         private SerializedProperty thresholdState;
         private SerializedProperty menuPath;
         private SerializedProperty ingameMenu;
-        private SerializedProperty allowOffLocal;
+        private SerializedProperty allowOffSelf;
         private SerializedProperty defaultVisibility;
-        private SerializedProperty localSaved;
+        private SerializedProperty selfSaved;
         private SerializedProperty friendsSaved;
         private SerializedProperty globalSaved;
         private ReorderableList outerList;
@@ -30,9 +30,9 @@ namespace UwU
             thresholdState = serializedObject.FindProperty("thresholdState");
             menuPath = serializedObject.FindProperty("menuPath");
             ingameMenu = serializedObject.FindProperty("ingameMenu");
-            allowOffLocal = serializedObject.FindProperty("allowOffLocal");
+            allowOffSelf = serializedObject.FindProperty("allowOffSelf");
             defaultVisibility = serializedObject.FindProperty("defaultVisibility");
-            localSaved = serializedObject.FindProperty("localSaved");
+            selfSaved = serializedObject.FindProperty("selfSaved");
             friendsSaved  = serializedObject.FindProperty("friendsSaved");
             globalSaved = serializedObject.FindProperty("globalSaved");
             SerializedProperty conditions = serializedObject.FindProperty("conditions");
@@ -221,33 +221,33 @@ namespace UwU
             EditorGUILayout.PropertyField(serializedObject.FindProperty("ingameMenu"),new GUIContent("Add In-Game Menu:"));
             EditorGUILayout.Space();
 
-            bool previousAllowOffLocal = allowOffLocal.boolValue;
+            bool previousAllowOffSelf = allowOffSelf.boolValue;
             if (ingameMenu.boolValue)
             {
-                string allowLocalText;
+                string allowSelfText;
                 if (thresholdState.intValue == 0)
                 {
-                    allowLocalText = "Allow False Locally:";
+                    allowSelfText = "Allow False for Self:";
                 }
                 else
                 {
-                    allowLocalText = "Allow True Locally:";
+                    allowSelfText = "Allow True for Self:";
                 }
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("allowOffLocal"),new GUIContent(allowLocalText));
-                bool currentAllowOfLocal = allowOffLocal.boolValue;
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("allowOffSelf"),new GUIContent(allowSelfText));
+                bool currentAllowOfSelf = allowOffSelf.boolValue;
                 
-                DropdownStateFix(previousAllowOffLocal, currentAllowOfLocal);
+                DropdownStateFix(previousAllowOffSelf, currentAllowOfSelf);
                 
                 string[] defaultVisibilityText;
-                if (allowOffLocal.boolValue)
+                if (allowOffSelf.boolValue)
                 {
                     // 4 entries when NOT checked (Off is included at index 0)
-                    defaultVisibilityText = new string[] { "None", "Local Only", "Friends and Local Only", "Everyone" };
+                    defaultVisibilityText = new string[] { "None", "Self Only", "Friends and Self Only", "Everyone" };
                 }
                 else
                 {
                     // 3 entries when checked (Off is omitted)
-                    defaultVisibilityText = new string[] { "Local Only", "Friends and Local Only", "Everyone" };
+                    defaultVisibilityText = new string[] { "Self Only", "Friends and Self Only", "Everyone" };
                 }
 
                 // Ensure index stays within bounds if toggled
@@ -264,31 +264,31 @@ namespace UwU
                 
                 EditorGUILayout.LabelField(ToggleOffLabel(serializedObject.FindProperty("createSubMenu").boolValue, "'Create Folder' should only be off if a menu at the path below already exists"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("menuPath"),new GUIContent("Menu Path:"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("createSubMenu"),new GUIContent("Create Folder:"));
+                //EditorGUILayout.PropertyField(serializedObject.FindProperty("createSubMenu"),new GUIContent("Create Folder:"));
                 //EditorGUILayout.LabelField("Menu Path: " + UwUHelperMethods.GetMenuFolderPath(serializedObject.FindProperty("menuPath").stringValue, serializedObject.FindProperty("createSubMenu").boolValue));
                 //EditorGUILayout.LabelField("Folder Name: " + UwUHelperMethods.GetMenuFolderName(serializedObject.FindProperty("menuPath").stringValue, serializedObject.FindProperty("createSubMenu").boolValue));
                 EditorGUILayout.Space();
 
-                if (!currentAllowOfLocal)
+                if (!currentAllowOfSelf)
                 {
                     EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.PropertyField(serializedObject.FindProperty("localSaved"),new GUIContent("Local Toggle Saved:"));
-                    EditorGUILayout.LabelField(ToggleOffLabel(serializedObject.FindProperty("localSaved").boolValue, "Will Revert to 'Local Only'"));
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("selfSaved"),new GUIContent("Self Toggle Saved:"));
+                    EditorGUILayout.LabelField(ToggleOffLabel(serializedObject.FindProperty("selfSaved").boolValue, "Will Revert to 'Self Only'"));
                     EditorGUILayout.EndHorizontal();
                     EditorGUILayout.BeginHorizontal();
                     EditorGUILayout.PropertyField(serializedObject.FindProperty("friendsSaved"),new GUIContent("Friends Toggle Saved:"));
-                    EditorGUILayout.LabelField(ToggleOffLabel(serializedObject.FindProperty("friendsSaved").boolValue, "Will Revert to 'Local Only'"));
+                    EditorGUILayout.LabelField(ToggleOffLabel(serializedObject.FindProperty("friendsSaved").boolValue, "Will Revert to 'Self Only'"));
                     EditorGUILayout.EndHorizontal();
                     EditorGUILayout.BeginHorizontal();
                     EditorGUILayout.PropertyField(serializedObject.FindProperty("globalSaved"),new GUIContent("Global Toggle Saved:"));
-                    EditorGUILayout.LabelField(ToggleOffLabel(serializedObject.FindProperty("globalSaved").boolValue, "Will Revert to 'Local Only'"));
+                    EditorGUILayout.LabelField(ToggleOffLabel(serializedObject.FindProperty("globalSaved").boolValue, "Will Revert to 'Self Only'"));
                     EditorGUILayout.EndHorizontal();
                 }
                 else
                 {
                     EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.PropertyField(serializedObject.FindProperty("localSaved"),new GUIContent("Local Toggle Saved:"));
-                    EditorGUILayout.LabelField(ToggleOffLabel(serializedObject.FindProperty("localSaved").boolValue, "Will Revert to 'None'"));
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("selfSaved"),new GUIContent("Self Toggle Saved:"));
+                    EditorGUILayout.LabelField(ToggleOffLabel(serializedObject.FindProperty("selfSaved").boolValue, "Will Revert to 'None'"));
                     EditorGUILayout.EndHorizontal();
                     EditorGUILayout.BeginHorizontal();
                     EditorGUILayout.PropertyField(serializedObject.FindProperty("friendsSaved"),new GUIContent("Friends Toggle Saved:"));
@@ -302,13 +302,13 @@ namespace UwU
             }
             else
             {
-                allowOffLocal.boolValue = false;
-                bool currentAlwaysOnLocal = allowOffLocal.boolValue;
+                allowOffSelf.boolValue = false;
+                bool currentAlwaysOnLocal = allowOffSelf.boolValue;
 
-                DropdownStateFix(previousAllowOffLocal, currentAlwaysOnLocal);
+                DropdownStateFix(previousAllowOffSelf, currentAlwaysOnLocal);
                 
                 // 3 entries (Off is omitted)
-                string[] defaultVisibilityText = { "Local Only", "Friends and Local Only", "Everyone"};
+                string[] defaultVisibilityText = { "Self Only", "Friends and Self Only", "Everyone"};
                 
                 // Ensure index stays within bounds if toggled
                 if (defaultVisibility.intValue >= defaultVisibilityText.Length)

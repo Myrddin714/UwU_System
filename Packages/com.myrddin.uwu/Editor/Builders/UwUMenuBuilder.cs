@@ -20,7 +20,7 @@ namespace UwU
 
             VRCExpressionsMenu.Control.Parameter localMenuParameter = new VRCExpressionsMenu.Control.Parameter
             {
-                name = $"{UwUControllerName}/Local",
+                name = $"{UwUControllerName}/Self",
             };
             VRCExpressionsMenu.Control.Parameter friendsMenuParameter = new VRCExpressionsMenu.Control.Parameter
             {

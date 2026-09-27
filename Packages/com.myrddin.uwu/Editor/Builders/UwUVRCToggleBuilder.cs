@@ -42,27 +42,27 @@ namespace UwU
             if (doesControllerExist)
             {
                 Debug.Log($"[UwU] Creating {UwUControllerName} Toggles");
-                var localToggle = FuryComponents.CreateToggle(UwUObject);
+                var selfToggle = FuryComponents.CreateToggle(UwUObject);
                 var friendsToggle = FuryComponents.CreateToggle(UwUObject);
                 var globalToggle = FuryComponents.CreateToggle(UwUObject);
 
                 if (UwUMenuPath != "")
                 {
-                    localToggle.SetMenuPath($"{UwUMenuPath}/UwU System/Toggle <color=green>Local");
+                    selfToggle.SetMenuPath($"{UwUMenuPath}/UwU System/Toggle <color=green>Local");
                     friendsToggle.SetMenuPath($"{UwUMenuPath}/UwU System/Toggle <color=yellow>Friends-Only");
                     globalToggle.SetMenuPath($"{UwUMenuPath}/UwU System/Toggle <color=red>Everyone");
                 }
                 else
                 {
-                    localToggle.SetMenuPath($"UwU System/Toggle <color=green>Local");
+                    selfToggle.SetMenuPath($"UwU System/Toggle <color=green>Local");
                     friendsToggle.SetMenuPath($"UwU System/Toggle <color=yellow>Friends-Only");
                     globalToggle.SetMenuPath($"UwU System/Toggle <color=red>Everyone");
                 }
                 
-                localToggle.SetGlobalParameter($"{UwUControllerName}/Local");
+                selfToggle.SetGlobalParameter($"{UwUControllerName}/Local");
                 //localToggle.AddExclusiveTag(UwUControllerName);
-                if (UwUData.localSaved)
-                    localToggle.SetSaved();
+                if (UwUData.selfSaved)
+                    selfToggle.SetSaved();
                 //if (UwUData.alwaysOnLocal)
                     //localToggle.SetExclusiveOffState();
                 
@@ -76,12 +76,12 @@ namespace UwU
                 if (UwUData.globalSaved)
                     globalToggle.SetSaved();
 
-                if (UwUData.allowOffLocal)
+                if (UwUData.allowOffSelf)
                 {
                     switch (UwUData.defaultVisibility)
                     {
                         case 1:
-                            localToggle.SetDefaultOn();
+                            selfToggle.SetDefaultOn();
                             break;
                         case 2:
                             friendsToggle.SetDefaultOn();
@@ -96,7 +96,7 @@ namespace UwU
                     switch (UwUData.defaultVisibility)
                     {
                         case 0:
-                            localToggle.SetDefaultOn();
+                            selfToggle.SetDefaultOn();
                             break;
                         case 1:
                             friendsToggle.SetDefaultOn();

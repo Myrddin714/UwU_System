@@ -70,7 +70,7 @@ namespace UwU
                 UwUController.AddParameter("IsOnFriendsList", AnimatorControllerParameterType.Float);
                 if (UwUData.ingameMenu)
                 {
-                    UwUController.AddParameter($"{namePrefix}/Local", AnimatorControllerParameterType.Float);
+                    UwUController.AddParameter($"{namePrefix}/Self", AnimatorControllerParameterType.Float);
                     UwUController.AddParameter($"{namePrefix}/Friends", AnimatorControllerParameterType.Float);
                     UwUController.AddParameter($"{namePrefix}/Global", AnimatorControllerParameterType.Float);
                 }
@@ -114,8 +114,8 @@ namespace UwU
                     UwURootDirectTree.AddChild(UwUIsLocalTree);
                     BlendTree UwUIsOnFriendsListTree = CreateUwUBlendTree("IsOnFriendsList", "IsOnFriendsList");
                     AssetDatabase.AddObjectToAsset(UwUIsOnFriendsListTree, UwUController);
-                    BlendTree UwULocalTree = CreateUwUBlendTree($"{namePrefix}/Local", $"{namePrefix}/Local");
-                    AssetDatabase.AddObjectToAsset(UwULocalTree, UwUController);
+                    BlendTree UwUSelfTree = CreateUwUBlendTree($"{namePrefix}/Self", $"{namePrefix}/Self");
+                    AssetDatabase.AddObjectToAsset(UwUSelfTree, UwUController);
                     BlendTree UwUFriendsTree = CreateUwUBlendTree($"{namePrefix}/Friends", $"{namePrefix}/Friends");
                     AssetDatabase.AddObjectToAsset(UwUFriendsTree, UwUController);
                     BlendTree UwUGlobalTree = CreateUwUBlendTree($"{namePrefix}/Global", $"{namePrefix}/Global");
@@ -128,17 +128,17 @@ namespace UwU
                     UwUIsOnFriendsListTree.AddChild(UwUFriendsTree, 1f);
                     UwUFriendsTree.AddChild(UwUGlobalTree, 0f);
                     UwUFriendsTree.AddChild(UwUOutputTrueClip, 1f);
-                    UwUIsLocalTree.AddChild(UwULocalTree, 1f);
-                    UwULocalTree.AddChild(UwUFriendsTree, 0f);
-                    UwULocalTree.AddChild(UwUOutputTrueClip, 1f);
+                    UwUIsLocalTree.AddChild(UwUSelfTree, 1f);
+                    UwUSelfTree.AddChild(UwUFriendsTree, 0f);
+                    UwUSelfTree.AddChild(UwUOutputTrueClip, 1f);
                 
                     CreateUwUToggleExclusiveLogic(UwUData, UwUController);
                 
                     EditorUtility.SetDirty(UwUController);
                     AssetDatabase.SaveAssets();
                 
-                    if (!UwUData.allowOffLocal)
-                        CreateUwUToggleAlwaysOnLocalLogic(UwUData, UwUController);
+                    if (!UwUData.allowOffSelf)
+                        CreateUwUToggleAlwaysOnSelfLogic(UwUData, UwUController);
                 
                     EditorUtility.SetDirty(UwUController);
                     AssetDatabase.SaveAssets();
@@ -602,12 +602,12 @@ namespace UwU
             return layerIndex;
         }
 
-        private static void CreateUwUToggleAlwaysOnLocalLogic(UwUMenu UwUData, AnimatorController UwUController)
+        private static void CreateUwUToggleAlwaysOnSelfLogic(UwUMenu UwUData, AnimatorController UwUController)
         {
             string namePrefix = UwUData.namePrefix;
             AnimatorControllerParameter[] controllerParameters = UwUController.parameters;
             AnimatorControllerParameter alwaysOnParameter = controllerParameters[0];
-            AnimatorControllerParameter localParameter = controllerParameters[3];
+            AnimatorControllerParameter selfParameter = controllerParameters[3];
             AnimatorControllerParameter friendsParameter = controllerParameters[4];
             AnimatorControllerParameter globalParameter = controllerParameters[5];
             
@@ -629,7 +629,7 @@ namespace UwU
 
             VRC_AvatarParameterDriver.Parameter localVRCParam = new VRC_AvatarParameterDriver.Parameter()
             {
-                name = localParameter.name,
+                name = selfParameter.name,
                 type = VRC_AvatarParameterDriver.ChangeType.Set,
                 value = 1f
             };
@@ -649,7 +649,7 @@ namespace UwU
             alwaysOnLocalTransition.hasExitTime = false;
             alwaysOnLocalTransition.canTransitionToSelf = false;
             alwaysOnLocalTransition.duration = 0f;
-            alwaysOnLocalTransition.AddCondition(AnimatorConditionMode.Less, .1f, localParameter.name);
+            alwaysOnLocalTransition.AddCondition(AnimatorConditionMode.Less, .1f, selfParameter.name);
             alwaysOnLocalTransition.AddCondition(AnimatorConditionMode.Less, .1f, friendsParameter.name);
             alwaysOnLocalTransition.AddCondition(AnimatorConditionMode.Less, .1f, globalParameter.name);
         }
@@ -676,7 +676,7 @@ namespace UwU
             
             AnimatorState idleState = exclusiveStateMachine.AddState($"Idle");
 
-            AnimatorState localExclusiveState = exclusiveStateMachine.AddState($"LocalExclusive_{controllerName}");
+            AnimatorState localExclusiveState = exclusiveStateMachine.AddState($"SelfExclusive_{controllerName}");
             AnimatorState friendsExclusiveState = exclusiveStateMachine.AddState($"FriendsExclusive_{controllerName}");
             AnimatorState globalExclusiveState = exclusiveStateMachine.AddState($"GlobalExclusive_{controllerName}");
             

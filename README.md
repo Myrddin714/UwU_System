@@ -46,7 +46,7 @@ Some other notes:
 
 ### Example 1
 
-![ClothesExample](Media\Example_Clothes.png)
+![ClothesExample](Media/Example_Clothes.png)
 
 * Setting the `Threshold State` to "False" along with having the `Allow True for Self` to off and the `Visibility Threshold` to "Friends and Self Only" means that the output is only true for nonfriends, but can be set to more, including being set to "None" which actually means that it would be on for every one.
 * The `Additional Output Parameter & Conditions` actually has 16 custom outputs, but they all follow a similar format as the ones shown.
@@ -55,7 +55,7 @@ Some other notes:
 
 ### Example 2
 
-![BottomsExample](Media\Example_Bottoms.png)
+![BottomsExample](Media/Example_Bottoms.png)
 
 * With the `Global Toggle Saved` being off, if the `Visibility Threshold` is set to "global" with the in-game menu at "Settings/UwU System", it be reset to "Self Only" when the avatar is reloaded or when loading into a different world.
 * The first custom output parameter "UwU/NoBottom" is only true when all the different pieces of bottom clothing on my avatar are toggled off. Note the conditions for this output are actually outputs from the component from Example 1, meaning that this output will adjust based on the Visiblity threshold of the other UwU System component.

@@ -40,19 +40,26 @@ Customizing the UwU System has many different options to allow you to tailor it 
 
 That's it!
 Some other notes:
-* Currently condition parameters can only be listed once per custom output parameter.
+* Currently condition parameters have to be unique per custom output parameter.
 
-## 🎉 Publishing a Release
+## 📃 Examples
 
-You can make a release by running the [Build Release](.github/workflows/release.yml) action. The version specified in your `package.json` file will be used to define the version of the release.
+### Example 1
 
-## 📃 Rebuilding the Listing
+![ClothesExample](Media\Example_Clothes.png)
 
-Whenever you make a change to a release - manually publishing it, or manually creating, editing or deleting a release, the [Build Repo Listing](.github/workflows/build-listing.yml) action will make a new index of all the releases available, and publish them as a website hosted fore free on [GitHub Pages](https://pages.github.com/). This listing can be used by the VPM to keep your package up to date, and the generated index page can serve as a simple landing page with info for your package. The URL for your package will be in the format `https://username.github.io/repo-name`.
+* Setting the `Threshold State` to "False" along with having the `Allow True for Self` to off and the `Visibility Threshold` to "Friends and Self Only" means that the output is only true for nonfriends, but can be set to more, including being set to "None" which actually means that it would be on for every one.
+* The `Additional Output Parameter & Conditions` actually has 16 custom outputs, but they all follow a similar format as the ones shown.
+  * In the first example, the condition "Glasses" is tied to the menu option on the avatar and is exclusive with "GlassesLenses" (because of how the animations they are designed for work) but does nothing else. The parameter "UwUClothes/Glasses" is tied to the animation that turns the glasses on for the avatar.
+* The result of all this is that the "Glasses" menu option on the avatar will turn on the glasses for the avatar, but will only be visible by nonfriends by default, but can be set to be visible to friends as well by setting the `Visibility Threshold` to "Self Only" or be visible to everyone by toggling off the system from the "Clothing/UwU System" menu path of the avatar.
 
-## 🏠 Customizing the Landing Page (Optional)
+### Example 2
 
-The action which rebuilds the listing also publishes a landing page. The source for this page is in `Website/index.html`. The automation system uses [Scriban](https://github.com/scriban/scriban) to fill in the objects like `{{ this }}` with information from the latest release's manifest, so it will stay up-to-date with the name, id and description that you provide there. You are welcome to modify this page however you want - just use the existing `{{ template.objects }}` to fill in that info wherever you like. The entire contents of your "Website" folder are published to your GitHub Page each time.
+![BottomsExample](Media\Example_Bottoms.png)
+
+* With the `Global Toggle Saved` being off, if the `Visibility Threshold` is set to "global" with the in-game menu at "Settings/UwU System", it be reset to "Self Only" when the avatar is reloaded or when loading into a different world.
+* The first custom output parameter "UwU/NoBottom" is only true when all the different pieces of bottom clothing on my avatar are toggled off. Note the conditions for this output are actually outputs from the component from Example 1, meaning that this output will adjust based on the Visiblity threshold of the other UwU System component.
+* The second custom output parameter "UwU/NoBottom2" has the `Condition State` set to false, as well as using the first custom output as a condition for the second output parameter. The result is that it works as almost the same as UwU/NoBottoms, but UwUClothes/Jockstrap will not turn it off.
 
 ## 💻 Technical Stuff
 

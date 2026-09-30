@@ -27,7 +27,7 @@ That's it. You can use the Parameters made by this component to trigger custom l
 
 Customizing the UwU System has many different options to allow you to tailor it to your use case.
 
-!\[component](Media/Component.png)
+![component](Media/Component.png)
 
 * `Output Prefix (Required):` The prefix for the `Default Output Variable` as well as a name for the files and other variables needed for the UwU System to work. If this is left blank, the component will do nothing.
 

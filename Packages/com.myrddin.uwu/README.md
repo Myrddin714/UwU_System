@@ -51,3 +51,4 @@ Customizing the UwU System has many different options to allow you to tailor it 
 * The Assets folder `UwUTemp` is created and used by this tool to store the controllers that build when entering play mode or starting an avatar build with an UwU System component. It is not recommended to store other assets in this folder.
 * Each UwU System component uses 3 synced bits on the avatar, but only if an in-game menu is used.
 * Currently condition parameters have to be unique per custom output parameter. This may change in the future if needed.
+

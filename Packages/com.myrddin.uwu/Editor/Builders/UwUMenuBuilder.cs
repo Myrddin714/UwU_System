@@ -13,9 +13,9 @@ namespace UwU
             string UwUControllerName = UwUData.namePrefix;
             string texturePath = "Packages/com.myrddin.uwu/Editor/Resources/";
             
-            Texture2D menuIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath + "UwU System.png");
-            Texture2D localIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath + "Local.png");
-            Texture2D friendsIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath + "Friends Only.png");
+            Texture2D menuIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath + "UwU_System.png");
+            Texture2D localIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath + "Self_Only.png");
+            Texture2D friendsIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath + "Friends_Only.png");
             Texture2D globalIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath + "Global.png");
 
             VRCExpressionsMenu.Control.Parameter localMenuParameter = new VRCExpressionsMenu.Control.Parameter

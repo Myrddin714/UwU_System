@@ -51,3 +51,28 @@ Customizing the UwU System has many different options to allow you to tailor it 
 * The Assets folder `UwUTemp` is created and used by this tool to store the controllers that build when entering play mode or starting an avatar build with an UwU System component. It is not recommended to store other assets in this folder.
 * Each UwU System component uses 3 synced bits on the avatar, but only if an in-game menu is used.
 * Currently condition parameters have to be unique per custom output parameter. This may change in the future if needed.
+
+## 📃 Examples
+
+<details>
+<summary>Example 1</summary>
+
+![ClothesExample](Media/Example_Clothes.png)
+
+* Setting the `Threshold State` to "False" along with having the `Allow True for Self` to off and the `Visibility Threshold` to "Friends and Self Only" means that the output is only true for nonfriends, but can be set to more, including being set to "None" which actually means that it would be on for every one.
+* The `Additional Output Parameter & Conditions` actually has 16 custom outputs, but they all follow a similar format as the ones shown.
+  * In the first example, the condition "Glasses" is tied to the menu option on the avatar and is exclusive with "GlassesLenses" (because of how the animations they are designed for work) but does nothing else. The parameter "UwUClothes/Glasses" is tied to the animation that turns the glasses on for the avatar.
+* The result of all this is that the "Glasses" menu option on the avatar will turn on the glasses for the avatar, but will only be visible by nonfriends by default, but can be set to be visible to friends as well by setting the `Visibility Threshold` to "Self Only" or be visible to everyone by toggling off the system from the "Clothing/UwU System" menu path of the avatar.
+
+</details>
+
+<details>
+<summary>Example 2</summary>
+
+![BottomsExample](Media/Example_Bottoms.png)
+
+* With the `Global Toggle Saved` being off, if the `Visibility Threshold` is set to "global" with the in-game menu at "Settings/UwU System", it be reset to "Self Only" when the avatar is reloaded or when loading into a different world.
+* The first custom output parameter "UwU/NoBottom" is only true when all the different pieces of bottom clothing on my avatar are toggled off. Note the conditions for this output are actually outputs from the component from Example 1, meaning that this output will adjust based on the Visiblity threshold of the other UwU System component.
+* The second custom output parameter "UwU/NoBottom2" has the `Condition State` set to false, as well as using the first custom output as a condition for the second output parameter. The result is that it works as almost the same as UwU/NoBottoms, but UwUClothes/Jockstrap will not turn it off.
+
+</details>

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.Animations;
 using UwU.Resources;
@@ -26,33 +27,35 @@ namespace UwU
                 return false;
             }
             
-            var uwuMenus = avatarGameObject.GetComponentsInChildren<UwUMenu>(true);// ?? avatarGameObject.AddComponent<UwUMenu>();
+            var UwUMenus = avatarGameObject.GetComponentsInChildren<UwUMenu>(true);
             
-            if (uwuMenus.Length > 0)
-                UwUBuildInit.UwUFolderSetup(avatarGameObject.name);
+            List<string> UwUPrefixes = new List<string>();
             
-            foreach (var menuData in uwuMenus)
+            foreach (var menuData in UwUMenus)
             {
                 // Execute your custom component build-time logic
                 Debug.Log($"[UwU] UwUComponent: {menuData.name} found");
-                UwUMenu UWUData = UwUHelperMethods.Trim(menuData);
-                UWUData.avatarName = avatarGameObject.name;
+                UwUMenu UwUData = UwUHelperMethods.Trim(menuData);
+                UwUData.avatarName = avatarGameObject.name;
                 AnimatorController UwUController;
                 VRCExpressionParameters UwUExpressionParams;
                 VRCExpressionsMenu UwUExpressionMenu;
-                if (UWUData.namePrefix != "")
+                if (UwUData.namePrefix != "" && !UwUPrefixes.Contains(UwUData.namePrefix))
                 {
-                    UwUController = UwUControllerBuilder.BuildUwUController(UWUData);
+                    UwUPrefixes.Add(UwUData.namePrefix);
+                    UwUController = UwUControllerBuilder.BuildUwUController(UwUData);
                     if (UwUController != null)
                     {
-                        UwUExpressionParams = UwUParameterBuilder.BuildUwUParameters(UWUData);
-                        UwUExpressionMenu = UwUMenuBuilder.BuildUwUMenu(UWUData, UwUExpressionParams);
+                        UwUExpressionParams = UwUParameterBuilder.BuildUwUParameters(UwUData);
+                        UwUExpressionMenu = UwUMenuBuilder.BuildUwUMenu(UwUData, UwUExpressionParams);
                         //UwUVRCToggleBuilder.BuildUwUToggles(menuData.gameObject, menuData);
-                        UwUVRCFullControllerBuilder.BuildUwUToggles(menuData.gameObject, UWUData, UwUExpressionParams, UwUController, UwUExpressionMenu);
+                        UwUVRCFullControllerBuilder.BuildUwUToggles(menuData.gameObject, UwUData, UwUExpressionParams, UwUController, UwUExpressionMenu);
                     }
                     else
                         Debug.Log($"[UwU] Controller build failed");
                 }
+                else if (UwUPrefixes.Contains(UwUData.namePrefix))
+                    Debug.LogWarning($"[UwU] Component with the prefix {UwUData.namePrefix} already exists on the avatar {UwUData.avatarName}. Skipping duplicate occurance on {menuData.name}");
                 else
                     Debug.LogWarning($"[UwU] UwUComponent on {menuData.name} is missing a name");
             }

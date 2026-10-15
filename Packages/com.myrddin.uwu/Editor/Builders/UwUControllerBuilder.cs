@@ -12,190 +12,126 @@ namespace UwU
 {
     internal class UwUControllerBuilder
     {
-        //[MenuItem("Tools/UwU/Generate Controller")]
-        //internal static void BuildUwUController()
         internal static AnimatorController BuildUwUController(UwUMenu UwUData)
         {
-            string outputFolder = "Assets/UwUTemp";
-            
-            // Temp Variables
-            //string UwUControllerName = "UwU";
-            //string UwUOutputVariable = $"{UwUControllerName}/Load";
-            
             string namePrefix = UwUData.namePrefix;
             string controllerName = namePrefix + "_" + UwUData.avatarName;
             string UwUOutputVariable = $"{namePrefix}/Load";
             bool thresholdState = UwUData.thresholdState == 0;
+
             
-            // Paths for assets inside the clean folder
-            string UwUControllerPath = $"{outputFolder}/{controllerName}.controller";
-
-            bool doesControllerExist = false;
-            string[] tempGuids = AssetDatabase.FindAssets($"{controllerName} t:animatorcontroller", new[] { outputFolder });
-            if (tempGuids.Length > 0)
+            // 2. Create the Animator Controller asset
+            Debug.Log($"[UwU] Creating controller with the name {controllerName}");
+            AnimatorController UwUController = new AnimatorController();
+            UwUController.AddLayer(new AnimatorControllerLayer {
+                stateMachine = new AnimatorStateMachine(),
+                name = $"{namePrefix}_UwULogic"
+            });
+            
+            // 3. Add Parameters
+            var UwUAlwaysOnParameter = new AnimatorControllerParameter
             {
-                List<string> exactMatchGuids = new List<string>();
-                foreach (string guid in tempGuids)
-                {
-                    string assetPath = AssetDatabase.GUIDToAssetPath(guid);
-                    string fileName = Path.GetFileNameWithoutExtension(assetPath);
-                    if (fileName == controllerName) 
-                    {
-                        exactMatchGuids.Add(guid);
-                    }
-                }
-
-                if (exactMatchGuids.Count > 0)
-                {
-                    doesControllerExist = true;
-                    Debug.LogWarning($"[UwU] Component with the name {controllerName} already exists. Skipping duplicate occurance");
-                }
+                name = $"{namePrefix}/AlwaysOn",
+                type = AnimatorControllerParameterType.Float,
+                defaultFloat = 1f // Sets default value to 1
+            };
+            UwUController.AddParameter(UwUAlwaysOnParameter);
+            UwUController.AddParameter("IsLocal", AnimatorControllerParameterType.Float);
+            UwUController.AddParameter("IsOnFriendsList", AnimatorControllerParameterType.Float);
+            if (UwUData.ingameMenu)
+            {
+                UwUController.AddParameter($"{namePrefix}/Self", AnimatorControllerParameterType.Float);
+                UwUController.AddParameter($"{namePrefix}/Friends", AnimatorControllerParameterType.Float);
+                UwUController.AddParameter($"{namePrefix}/Global", AnimatorControllerParameterType.Float);
             }
-
-            if (!doesControllerExist)
+            UwUController.AddParameter(UwUOutputVariable, AnimatorControllerParameterType.Float);
+            
+            // 4. Initialize Root State Machine & Root Direct Blend Tree
+            BlendTree UwURootDirectTree;
+            UwUController.CreateBlendTreeInController($"{namePrefix}", out UwURootDirectTree, 0);
+            
+            UwURootDirectTree.blendType = BlendTreeType.Direct;
+            UwURootDirectTree.name = $"{namePrefix}_Root";
+            
+            // 5. Programmatically generate an AAP Animation Clip (sets AAP value to 1)
+            AnimationClip UwUOutputFalseClip;
+            AnimationClip UwUOutputTrueClip;
+            if (thresholdState)
             {
-                // 2. Create the Animator Controller asset
-                Debug.Log($"[UwU] Creating controller with the name {controllerName}");
-                AnimatorController UwUController = AnimatorController.CreateAnimatorControllerAtPath(UwUControllerPath);
-                
-                // 3. Add Parameters
-                var UwUAlwaysOnParameter = new AnimatorControllerParameter
-                {
-                    name = $"{namePrefix}/AlwaysOn",
-                    type = AnimatorControllerParameterType.Float,
-                    defaultFloat = 1f // Sets default value to 1
-                };
-                UwUController.AddParameter(UwUAlwaysOnParameter);
-                UwUController.AddParameter("IsLocal", AnimatorControllerParameterType.Float);
-                UwUController.AddParameter("IsOnFriendsList", AnimatorControllerParameterType.Float);
-                if (UwUData.ingameMenu)
-                {
-                    UwUController.AddParameter($"{namePrefix}/Self", AnimatorControllerParameterType.Float);
-                    UwUController.AddParameter($"{namePrefix}/Friends", AnimatorControllerParameterType.Float);
-                    UwUController.AddParameter($"{namePrefix}/Global", AnimatorControllerParameterType.Float);
-                }
-                UwUController.AddParameter(UwUOutputVariable, AnimatorControllerParameterType.Float);
-                
-                // 4. Initialize Root State Machine & Root Direct Blend Tree
-                //AnimatorStateMachine rootStateMachine = UwUController.layers[0].stateMachine;
-                BlendTree UwURootDirectTree;
-                UwUController.CreateBlendTreeInController($"{namePrefix}", out UwURootDirectTree, 0);
-                
-                UwURootDirectTree.blendType = BlendTreeType.Direct;
-                UwURootDirectTree.name = $"{namePrefix}_Root";
-                
-                // 5. Programmatically generate an AAP Animation Clip (sets AAP value to 1)
-                AnimationClip UwUOutputFalseClip;
-                AnimationClip UwUOutputTrueClip;
-                if (thresholdState)
-                {
-                    UwUOutputFalseClip = CreateAAPClip(UwUOutputVariable, 0.0f);
-                    UwUOutputFalseClip.name = $"{UwUOutputVariable}_False";
-                    AssetDatabase.AddObjectToAsset(UwUOutputFalseClip, UwUController);
-                    UwUOutputTrueClip = CreateAAPClip(UwUOutputVariable, 1.0f);
-                    UwUOutputTrueClip.name = $"{UwUOutputVariable}_True";
-                    AssetDatabase.AddObjectToAsset(UwUOutputTrueClip, UwUController);
-                }
-                else
-                {
-                    UwUOutputFalseClip = CreateAAPClip(UwUOutputVariable, 1.0f);
-                    UwUOutputFalseClip.name = $"{UwUOutputVariable}_False";
-                    AssetDatabase.AddObjectToAsset(UwUOutputFalseClip, UwUController);
-                    UwUOutputTrueClip = CreateAAPClip(UwUOutputVariable, 0.0f);
-                    UwUOutputTrueClip.name = $"{UwUOutputVariable}_True";
-                    AssetDatabase.AddObjectToAsset(UwUOutputTrueClip, UwUController);
-                }
-                
-
-                if (UwUData.ingameMenu)
-                {
-                    BlendTree UwUIsLocalTree = CreateUwUBlendTree("IsLocal", "IsLocal");
-                    AssetDatabase.AddObjectToAsset(UwUIsLocalTree, UwUController);
-                    UwURootDirectTree.AddChild(UwUIsLocalTree);
-                    BlendTree UwUIsOnFriendsListTree = CreateUwUBlendTree("IsOnFriendsList", "IsOnFriendsList");
-                    AssetDatabase.AddObjectToAsset(UwUIsOnFriendsListTree, UwUController);
-                    BlendTree UwUSelfTree = CreateUwUBlendTree($"{namePrefix}/Self", $"{namePrefix}/Self");
-                    AssetDatabase.AddObjectToAsset(UwUSelfTree, UwUController);
-                    BlendTree UwUFriendsTree = CreateUwUBlendTree($"{namePrefix}/Friends", $"{namePrefix}/Friends");
-                    AssetDatabase.AddObjectToAsset(UwUFriendsTree, UwUController);
-                    BlendTree UwUGlobalTree = CreateUwUBlendTree($"{namePrefix}/Global", $"{namePrefix}/Global");
-                    AssetDatabase.AddObjectToAsset(UwUGlobalTree, UwUController);
-                
-                    UwUIsLocalTree.AddChild(UwUIsOnFriendsListTree, 0f);
-                    UwUIsOnFriendsListTree.AddChild(UwUGlobalTree,0f);
-                    UwUGlobalTree.AddChild(UwUOutputFalseClip, 0f);
-                    UwUGlobalTree.AddChild(UwUOutputTrueClip, 1f);
-                    UwUIsOnFriendsListTree.AddChild(UwUFriendsTree, 1f);
-                    UwUFriendsTree.AddChild(UwUGlobalTree, 0f);
-                    UwUFriendsTree.AddChild(UwUOutputTrueClip, 1f);
-                    UwUIsLocalTree.AddChild(UwUSelfTree, 1f);
-                    UwUSelfTree.AddChild(UwUFriendsTree, 0f);
-                    UwUSelfTree.AddChild(UwUOutputTrueClip, 1f);
-                
-                    CreateUwUToggleExclusiveLogic(UwUData, UwUController);
-                
-                    EditorUtility.SetDirty(UwUController);
-                    AssetDatabase.SaveAssets();
-                
-                    if (!UwUData.allowOffSelf)
-                        CreateUwUToggleAlwaysOnSelfLogic(UwUData, UwUController);
-                
-                    EditorUtility.SetDirty(UwUController);
-                    AssetDatabase.SaveAssets();
-                }
-                else
-                {
-                    switch (UwUData.defaultVisibility)
-                    {
-                        case 0:
-                            BlendTree UwUIsLocalTreeLocal = CreateUwUBlendTree("IsLocal", "IsLocal");
-                            AssetDatabase.AddObjectToAsset(UwUIsLocalTreeLocal, UwUController);
-                            UwURootDirectTree.AddChild(UwUIsLocalTreeLocal);
-                            UwUIsLocalTreeLocal.AddChild(UwUOutputFalseClip, 0f);
-                            UwUIsLocalTreeLocal.AddChild(UwUOutputTrueClip, 1f);
-                            EditorUtility.SetDirty(UwUController);
-                            AssetDatabase.SaveAssets();
-                            break;
-                        case 1:
-                            BlendTree UwUIsLocalTreeFriend = CreateUwUBlendTree("IsLocal", "IsLocal");
-                            AssetDatabase.AddObjectToAsset(UwUIsLocalTreeFriend, UwUController);
-                            UwURootDirectTree.AddChild(UwUIsLocalTreeFriend);
-                            BlendTree UwUIsOnFriendsListTree = CreateUwUBlendTree("IsOnFriendsList", "IsOnFriendsList");
-                            AssetDatabase.AddObjectToAsset(UwUIsOnFriendsListTree, UwUController);
-                            UwUIsLocalTreeFriend.AddChild(UwUIsOnFriendsListTree, 0f);
-                            UwUIsLocalTreeFriend.AddChild(UwUOutputTrueClip, 1f);
-                            UwUIsOnFriendsListTree.AddChild(UwUOutputFalseClip, 0f);
-                            UwUIsOnFriendsListTree.AddChild(UwUOutputTrueClip, 1f);
-                            EditorUtility.SetDirty(UwUController);
-                            AssetDatabase.SaveAssets();
-                            break;
-                        case 2:
-                            UwURootDirectTree.AddChild(UwUOutputTrueClip, 1f);
-                            EditorUtility.SetDirty(UwUController);
-                            AssetDatabase.SaveAssets();
-                            break;
-                    }
-                }
-
-                if (UwUData.conditions.Count > 0) 
-                    CreateUwUOutputBranches(UwUData, UwUController, UwURootDirectTree, UwUOutputVariable);
-                
-                ChildMotion[] UwURootChildren = UwURootDirectTree.children;
-                for (int i = 0; i < UwURootChildren.Length; i++)
-                {
-                    UwURootChildren[i].directBlendParameter = UwUAlwaysOnParameter.name;
-                }
-                UwURootDirectTree.children = UwURootChildren;
-                
-                EditorUtility.SetDirty(UwUController);
-                AssetDatabase.SaveAssets();
-                
-                return UwUController;
+                UwUOutputFalseClip = CreateAAPClip(UwUOutputVariable, 0.0f);
+                UwUOutputFalseClip.name = $"{UwUOutputVariable}_False";
+                UwUOutputTrueClip = CreateAAPClip(UwUOutputVariable, 1.0f);
+                UwUOutputTrueClip.name = $"{UwUOutputVariable}_True";
             }
             else
             {
-                return null;
+                UwUOutputFalseClip = CreateAAPClip(UwUOutputVariable, 1.0f);
+                UwUOutputFalseClip.name = $"{UwUOutputVariable}_False";
+                UwUOutputTrueClip = CreateAAPClip(UwUOutputVariable, 0.0f);
+                UwUOutputTrueClip.name = $"{UwUOutputVariable}_True";
             }
+            
+            if (UwUData.ingameMenu)
+            {
+                BlendTree UwUIsLocalTree = CreateUwUBlendTree("IsLocal", "IsLocal");
+                UwURootDirectTree.AddChild(UwUIsLocalTree);
+                BlendTree UwUIsOnFriendsListTree = CreateUwUBlendTree("IsOnFriendsList", "IsOnFriendsList");
+                BlendTree UwUSelfTree = CreateUwUBlendTree($"{namePrefix}/Self", $"{namePrefix}/Self");
+                BlendTree UwUFriendsTree = CreateUwUBlendTree($"{namePrefix}/Friends", $"{namePrefix}/Friends");
+                BlendTree UwUGlobalTree = CreateUwUBlendTree($"{namePrefix}/Global", $"{namePrefix}/Global");
+                
+                UwUIsLocalTree.AddChild(UwUIsOnFriendsListTree, 0f);
+                UwUIsOnFriendsListTree.AddChild(UwUGlobalTree,0f);
+                UwUGlobalTree.AddChild(UwUOutputFalseClip, 0f);
+                UwUGlobalTree.AddChild(UwUOutputTrueClip, 1f);
+                UwUIsOnFriendsListTree.AddChild(UwUFriendsTree, 1f);
+                UwUFriendsTree.AddChild(UwUGlobalTree, 0f);
+                UwUFriendsTree.AddChild(UwUOutputTrueClip, 1f);
+                UwUIsLocalTree.AddChild(UwUSelfTree, 1f);
+                UwUSelfTree.AddChild(UwUFriendsTree, 0f);
+                UwUSelfTree.AddChild(UwUOutputTrueClip, 1f);
+            
+                CreateUwUToggleExclusiveLogic(UwUData, UwUController);
+            
+                if (!UwUData.allowOffSelf)
+                    CreateUwUToggleAlwaysOnSelfLogic(UwUData, UwUController);
+            }
+            else
+            {
+                switch (UwUData.defaultVisibility)
+                {
+                    case 0:
+                        BlendTree UwUIsLocalTreeLocal = CreateUwUBlendTree("IsLocal", "IsLocal");
+                        UwURootDirectTree.AddChild(UwUIsLocalTreeLocal);
+                        UwUIsLocalTreeLocal.AddChild(UwUOutputFalseClip, 0f);
+                        UwUIsLocalTreeLocal.AddChild(UwUOutputTrueClip, 1f);
+                        break;
+                    case 1:
+                        BlendTree UwUIsLocalTreeFriend = CreateUwUBlendTree("IsLocal", "IsLocal");
+                        UwURootDirectTree.AddChild(UwUIsLocalTreeFriend);
+                        BlendTree UwUIsOnFriendsListTree = CreateUwUBlendTree("IsOnFriendsList", "IsOnFriendsList");
+                        UwUIsLocalTreeFriend.AddChild(UwUIsOnFriendsListTree, 0f);
+                        UwUIsLocalTreeFriend.AddChild(UwUOutputTrueClip, 1f);
+                        UwUIsOnFriendsListTree.AddChild(UwUOutputFalseClip, 0f);
+                        UwUIsOnFriendsListTree.AddChild(UwUOutputTrueClip, 1f);
+                        break;
+                    case 2:
+                        UwURootDirectTree.AddChild(UwUOutputTrueClip, 1f);
+                        break;
+                }
+            }
+
+            if (UwUData.conditions.Count > 0) 
+                CreateUwUOutputBranches(UwUData, UwUController, UwURootDirectTree, UwUOutputVariable);
+            
+            ChildMotion[] UwURootChildren = UwURootDirectTree.children;
+            for (int i = 0; i < UwURootChildren.Length; i++)
+            {
+                UwURootChildren[i].directBlendParameter = UwUAlwaysOnParameter.name;
+            }
+            UwURootDirectTree.children = UwURootChildren;
+            
+            return UwUController;
         }
 
         private static void CreateUwUOutputBranches(UwUMenu UwUData, AnimatorController UwUController, BlendTree UwURootDirectTree, string UwUOutputVariable)
@@ -224,24 +160,19 @@ namespace UwU
                         {
                             UwUConditionalOutputFalseClip = CreateAAPClip($"{UwUConditionalOutputs[i]}", 0.0f); 
                             UwUConditionalOutputFalseClip.name = $"{UwUConditionalOutputs[i]}_False";
-                            AssetDatabase.AddObjectToAsset(UwUConditionalOutputFalseClip, UwUController);
                             UwUConditionalOutputTrueClip = CreateAAPClip($"{UwUConditionalOutputs[i]}", 1.0f);
                             UwUConditionalOutputTrueClip.name = $"{UwUConditionalOutputs[i]}_True";
-                            AssetDatabase.AddObjectToAsset(UwUConditionalOutputTrueClip, UwUController);
                         }
                         else
                         {
                             UwUConditionalOutputFalseClip = CreateAAPClip($"{UwUConditionalOutputs[i]}", 1.0f); 
                             UwUConditionalOutputFalseClip.name = $"{UwUConditionalOutputs[i]}_False";
-                            AssetDatabase.AddObjectToAsset(UwUConditionalOutputFalseClip, UwUController);
                             UwUConditionalOutputTrueClip = CreateAAPClip($"{UwUConditionalOutputs[i]}", 0.0f);
                             UwUConditionalOutputTrueClip.name = $"{UwUConditionalOutputs[i]}_True";
-                            AssetDatabase.AddObjectToAsset(UwUConditionalOutputTrueClip, UwUController);
                         }
                         
                         
                         BlendTree UwUConditionalOutputVariableTree = CreateUwUBlendTree($"{UwUConditionalOutputs[i]}_{UwUOutputVariable}", $"{UwUOutputVariable}");
-                        AssetDatabase.AddObjectToAsset(UwUConditionalOutputVariableTree, UwUController);
                         
                         UwURootDirectTree.AddChild(UwUConditionalOutputVariableTree);
 
@@ -257,10 +188,6 @@ namespace UwU
                     }
                 }
             }
-            
-            // Save assets
-            EditorUtility.SetDirty(UwUController);
-            AssetDatabase.SaveAssets();
         }
 
         private static void CreateOutputConditionTree(List<string> globalParameters, AnimatorController UwUController, BlendTree parentTree, List<UwUOutputCondition> outputConditions,AnimationClip UwUConditionalOutputFalseClip, AnimationClip UwUConditionalOutputTrueClip, bool parentOutputReversed)
@@ -351,20 +278,16 @@ namespace UwU
                 if (outputConditions.Count == 1)
                 {
                     BlendTree recursiveTree = CreateUwUBlendTree( conditionParameterLogicName /*+ "_" + outputConditions.Count.ToString()*/, conditionParameterLogicName);
-                    AssetDatabase.AddObjectToAsset(recursiveTree, UwUController);
                     recursiveTree.AddChild(UwUConditionalOutputTrueClip, trueThreshold);
                     recursiveTree.AddChild(UwUConditionalOutputFalseClip, falseThreshold);
                     ChildMotion[] recursiveChildren = recursiveTree.children;
                     recursiveChildren = recursiveChildren.OrderBy(c => c.threshold).ToArray();
                     recursiveTree.children = recursiveChildren;
                     parentTree.AddChild(recursiveTree, parentFalseThreshold);
-                    EditorUtility.SetDirty(UwUController);
-                    AssetDatabase.SaveAssets();
                 }
                 else if (outputConditions.Count > 0)
                 {
                     BlendTree recursiveTree = CreateUwUBlendTree(conditionParameterLogicName /*+ "_" + outputConditions.Count.ToString()*/, conditionParameterLogicName);
-                    AssetDatabase.AddObjectToAsset(recursiveTree, UwUController);
                     outputConditions.RemoveAt(index);
                     parentTree.AddChild(recursiveTree, parentFalseThreshold);
                     if (hasDuplicates)
@@ -386,8 +309,6 @@ namespace UwU
                         recursiveChildren = recursiveChildren.OrderBy(c => c.threshold).ToArray();
                         recursiveTree.children = recursiveChildren;
                     }
-                    EditorUtility.SetDirty(UwUController);
-                    AssetDatabase.SaveAssets();
                 }
                 else
                 {
@@ -409,8 +330,6 @@ namespace UwU
                 outputConditions.RemoveAt(index);
                 CreateOutputConditionTree(globalParameters, UwUController, parentTree, outputConditions, UwUConditionalOutputFalseClip, UwUConditionalOutputTrueClip, parentOutputReversed);
             }
-            EditorUtility.SetDirty(UwUController);
-            AssetDatabase.SaveAssets();
         }
 
         private static void AddIntConditionLogic(AnimatorController UwUController, int layerIndex, string parametername, int logicType, int conditionValue, bool createClips)
@@ -421,8 +340,6 @@ namespace UwU
             logicStateMachine.name = UwUController.layers[layerIndex].name;
             
             UwUController.layers[layerIndex].stateMachine = logicStateMachine;
-            
-            AssetDatabase.AddObjectToAsset(logicStateMachine, UwUController);
 
             string logicParameterName = parametername + "_Logic_" + layerIndex;
             AnimationClip logicFalseClip;
@@ -432,10 +349,8 @@ namespace UwU
             {
                 logicFalseClip = CreateAAPClip(logicParameterName, 0.0f);
                 logicFalseClip.name = $"{logicParameterName}_False";
-                AssetDatabase.AddObjectToAsset(logicFalseClip, UwUController);
                 logicTrueClip = CreateAAPClip(logicParameterName, 1.0f);
                 logicTrueClip.name = $"{logicParameterName}_True";
-                AssetDatabase.AddObjectToAsset(logicTrueClip, UwUController);
             }
             else
             {
@@ -481,9 +396,6 @@ namespace UwU
             }
             layers[layerIndex].stateMachine = logicStateMachine;
             UwUController.layers = layers;
-            
-            EditorUtility.SetDirty(UwUController);
-            AssetDatabase.SaveAssets();
         }
         
         private static void AddFloatConditionLogic(AnimatorController UwUController, int layerIndex, string parametername, int logicType, float conditionValue, bool createClips)
@@ -494,8 +406,6 @@ namespace UwU
             logicStateMachine.name = UwUController.layers[layerIndex].name;
             
             UwUController.layers[layerIndex].stateMachine = logicStateMachine;
-            
-            AssetDatabase.AddObjectToAsset(logicStateMachine, UwUController);
 
             string logicParameterName = parametername + "_Logic_" + layerIndex;
             AnimationClip logicFalseClip;
@@ -505,10 +415,8 @@ namespace UwU
             {
                 logicFalseClip = CreateAAPClip(logicParameterName, 0.0f);
                 logicFalseClip.name = $"{logicParameterName}_False";
-                AssetDatabase.AddObjectToAsset(logicFalseClip, UwUController);
                 logicTrueClip = CreateAAPClip(logicParameterName, 1.0f);
                 logicTrueClip.name = $"{logicParameterName}_True";
-                AssetDatabase.AddObjectToAsset(logicTrueClip, UwUController);
             }
             else
             {
@@ -546,9 +454,6 @@ namespace UwU
             }
             layers[layerIndex].stateMachine = logicStateMachine;
             UwUController.layers = layers;
-            
-            EditorUtility.SetDirty(UwUController);
-            AssetDatabase.SaveAssets();
         }
 
         private static AnimatorControllerParameter GetParameterByName(AnimatorController UwUController, string parameterName)
@@ -619,8 +524,6 @@ namespace UwU
             
             exclusiveLayer.stateMachine = exclusiveStateMachine;
             
-            AssetDatabase.AddObjectToAsset(exclusiveStateMachine, UwUController);
-            
             UwUController.AddLayer(exclusiveLayer);
             
             AnimatorState idleState = exclusiveStateMachine.AddState($"Idle");
@@ -669,8 +572,6 @@ namespace UwU
             exclusiveStateMachine.name = $"{controllerName}_ExclusiveStates";
             
             exclusiveLayer.stateMachine = exclusiveStateMachine;
-            
-            AssetDatabase.AddObjectToAsset(exclusiveStateMachine, UwUController);
             
             UwUController.AddLayer(exclusiveLayer);
             

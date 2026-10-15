@@ -1,6 +1,6 @@
 {
   "name": "com.myrddin.uwu",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "UwU System",
   "description": "A System to create VRChat avatar parameters that change state depending on local and friend state.",
   "unity": "2022.3",
